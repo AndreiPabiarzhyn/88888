@@ -1,84 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Embedded Brython IDE</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.5/brython.min.js"></script>
-    <style>
-        .CodeMirror {
-            border: 1px solid #eee;
-            height: auto;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #output {
-            border: 1px solid #333;
-            padding: 10px;
-            height: 200px;
-            overflow: auto;
-            white-space: pre-wrap;
-            background-color: #333;
-            color: #fff;
-        }
-        button {
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Генератор примеров</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body onload="brython()">
-    <h2>Brython IDE!!!</h2>
-    <textarea id="code" name="code">
-print("Hello, Brython!---")
-name = input('Введите свое имя: ')
-print(f'Привет, {name}')
-    </textarea>
-    <button onclick="runCode()">Run</button>
-    <pre id="output"></pre>
+<body>
+  <div class="container">
+    <h1>Генератор примеров</h1>
+    <div class="problem">
+      <span id="num1"></span> + <span id="num2"></span> =
+      <input type="text" id="answer">
+      <button onclick="checkAnswer()">Проверить</button>
+    </div>
+  </div>
 
-    <script>
-        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-            lineNumbers: true,
-            mode: "python",
-            theme: "default"
-        });
+  <div class="modal" id="modal">
+    <div class="modal-content" id="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img src="" id="modal-image" alt="Результат">
+    </div>
+  </div>
 
-        function runCode() {
-            var code = editor.getValue();
-            var output = document.getElementById("output");
-            output.innerHTML = ''; // clear previous output
-
-            // Create a new script element
-            var script = document.createElement('script');
-            script.type = 'text/python';
-            script.innerHTML = `
-import sys
-from browser import document, window
-
-class Output:
-    def write(self, text):
-        document['output'].innerHTML += text
-
-sys.stdout = Output()
-sys.stderr = Output()
-
-# Redefine input to use JavaScript prompt
-def input(prompt=''):
-    document['output'].innerHTML += prompt
-    return window.prompt(prompt)
-
-code = """${code}"""
-try:
-    exec(code)
-except Exception as e:
-    document['output'].innerHTML += str(e)
-`;
-            document.body.appendChild(script);
-        }
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>
